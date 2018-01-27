@@ -1,3 +1,60 @@
+%format-table {
+  width: 300px;;
+  display: flex;
+  justify-content: space-between;
+}
+
+%format-row {
+  height: 25px;
+  margin: 0px;
+  display: flex;
+  align-items: center;
+}
+
+.food-headers {
+  @extend %format-table;
+  @extend %format-row;
+
+  .name-header {
+    width: 200px;
+    @extend %format-row;
+  }
+
+  .calories-header {
+    width: 60px;
+    @extend %format-row;
+  }
+
+  .hidden {
+    width: 50px;
+  }
+}
+
+#food-item-row {
+  @extend %format-table;
+  @extend %format-row;
+
+  .food-item-name {
+    width: 200px;
+  }
+
+  .food-item-calories {
+    width: 50px;
+  }
+
+  .button-container {
+    width: 25px;
+
+    .food-item-delete-btn {
+      color: white;
+      height: 20px;
+      width: 20px;
+      border: 1px solid tomato;
+      border-radius: 30px;
+      background-color: tomato;
+      text-align: center;
+    }
+  }
 }
 
 #name-notice {
