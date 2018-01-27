@@ -17,12 +17,10 @@
 
   .name-header {
     width: 200px;
-    @extend %format-row;
   }
 
   .calories-header {
     width: 60px;
-    @extend %format-row;
   }
 
   .hidden {
