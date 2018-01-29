@@ -49,6 +49,7 @@
 	var foodsRequests = __webpack_require__(1);
 	var foodsDiary = __webpack_require__(2);
 	__webpack_require__(3);
+	__webpack_require__(7);
 
 	$(document).ready(function () {
 	  var fileName = location.pathname.split('/').slice(-1)[0];
@@ -312,7 +313,7 @@
 
 
 	// module
-	exports.push([module.id, ".food-headers, #food-item-row {\n  width: 300px;\n  display: flex;\n  justify-content: space-between; }\n\n.food-headers, #food-item-row {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.food-headers .name-header {\n  width: 200px; }\n\n.food-headers .calories-header {\n  width: 60px; }\n\n.food-headers .hidden {\n  width: 50px; }\n\n#food-item-row .food-item-name {\n  width: 200px; }\n\n#food-item-row .food-item-calories {\n  width: 50px; }\n\n#food-item-row .button-container {\n  width: 25px; }\n  #food-item-row .button-container .food-item-delete-btn {\n    color: white;\n    height: 20px;\n    width: 20px;\n    border: 1px solid tomato;\n    border-radius: 30px;\n    background-color: tomato;\n    text-align: center; }\n\n#name-notice {\n  display: none;\n  color: tomato; }\n\n#calories-notice {\n  display: none;\n  color: tomato; }\n", ""]);
+	exports.push([module.id, ".food-headers, #food-item-row {\n  width: 300px;\n  display: flex;\n  justify-content: space-between; }\n\n.food-headers, #food-item-row {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.food-headers .name-header, .food-headers .calorie-header {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.food-headers .name-header {\n  width: 200px; }\n\n.food-headers .calorie-header {\n  width: 60px;\n  padding-right: 5px;\n  border-left: 0px; }\n\n.food-headers .hidden {\n  width: 50px; }\n\n#food-item-row .food-item-name {\n  width: 200px; }\n\n#food-item-row .food-item-calories {\n  width: 50px; }\n\n#food-item-row .button-container {\n  width: 25px; }\n  #food-item-row .button-container .food-item-delete-btn {\n    color: white;\n    height: 20px;\n    width: 20px;\n    border: 1px solid tomato;\n    border-radius: 30px;\n    background-color: tomato;\n    text-align: center; }\n\n#name-notice {\n  display: none;\n  color: tomato; }\n\n#calories-notice {\n  display: none;\n  color: tomato; }\n", ""]);
 
 	// exports
 
@@ -623,6 +624,46 @@
 		if(oldSrc)
 			URL.revokeObjectURL(oldSrc);
 	}
+
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(8);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(6)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!../node_modules/css-loader/index.js!../node_modules/sass-loader/index.js!./diary.scss", function() {
+				var newContent = require("!!../node_modules/css-loader/index.js!../node_modules/sass-loader/index.js!./diary.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(5)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container h3 {\n    margin: 0;\n    font-weight: 100; }\n  .meals-container #meal-table {\n    padding: 20px; }\n", ""]);
+
+	// exports
 
 
 /***/ })
