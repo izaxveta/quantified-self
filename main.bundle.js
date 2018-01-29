@@ -58,6 +58,7 @@
 	    foodsRequests.getFoods();
 	  } else {
 	    foodsDiary.getDiaryFoods();
+	    foodsDiary.getMeals();
 	  }
 
 	  $('#submit-food').on('click', function (event) {
@@ -250,6 +251,28 @@
 	  });
 	};
 
+	var getMeals = function getMeals() {
+	  fetch('https://ivmh-qs-api.herokuapp.com/api/v1/meals').then(function (response) {
+	    return handleResponse(response);
+	  }).then(function (meals) {
+	    meals.forEach(function (meal) {
+	      return populateMealTable(meal);
+	    });
+	  }).catch(function (error) {
+	    return console.error({ error: error });
+	  });
+	};
+
+	var populateMealTable = function populateMealTable(meal) {
+	  meal.foods.forEach(function (food) {
+	    return addFoodToMeal(meal, food);
+	  });
+	};
+
+	var addFoodToMeal = function addFoodToMeal(meal, food) {
+	  $('#' + meal.name.toLowerCase() + '-table-info').append('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" aria-label="Delete">-</button>\n      </div>\n    </article>');
+	};
+
 	var handleResponse = function handleResponse(response) {
 	  return response.json().then(function (json) {
 	    if (!response.ok) {
@@ -275,7 +298,8 @@
 	};
 
 	module.exports = {
-	  getDiaryFoods: getDiaryFoods
+	  getDiaryFoods: getDiaryFoods,
+	  getMeals: getMeals
 	};
 
 /***/ }),
@@ -661,7 +685,7 @@
 
 
 	// module
-	exports.push([module.id, ".breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container h3 {\n    margin: 0;\n    font-weight: 100; }\n  .meals-container #meal-table {\n    padding: 20px; }\n", ""]);
+	exports.push([module.id, ".breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container h3 {\n    margin: 0;\n    font-weight: 100; }\n  .meals-container .meal-table {\n    padding: 20px; }\n", ""]);
 
 	// exports
 
