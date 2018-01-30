@@ -258,6 +258,8 @@
 	    meals.forEach(function (meal) {
 	      return populateMealTable(meal);
 	    });
+	  }).then(function (meals) {
+	    return calculateTotalCalories();
 	  }).catch(function (error) {
 	    return console.error({ error: error });
 	  });
@@ -270,7 +272,7 @@
 	};
 
 	var renderFoodToMealTable = function renderFoodToMealTable(meal, food) {
-	  $('#' + meal.name.toLowerCase() + '-table-info').append('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" aria-label="Delete">-</button>\n      </div>\n    </article>');
+	  $('#' + meal.name.toLowerCase() + '-table-info').append('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="' + meal.name.toLowerCase() + '-food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" aria-label="Delete">-</button>\n      </div>\n    </article>');
 	};
 
 	var handleResponse = function handleResponse(response) {
@@ -295,6 +297,26 @@
 
 	var renderDiaryFood = function renderDiaryFood(food) {
 	  $('#food-table-info').prepend('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n     <div class="checkbox-container">\n      <input id="food-item-' + food.id + '" type="checkbox" class="food-item-checkbox">\n     </div>\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="food-item-calories">' + food.calories + '</p>\n    </article>');
+	};
+
+	var calculateTotalCalories = function calculateTotalCalories() {
+	  var meals = ["breakfast", "lunch", "dinner", "snacks"];
+	  meals.forEach(function (meal) {
+	    return mealTotalCalories(meal);
+	  });
+	};
+
+	var mealTotalCalories = function mealTotalCalories(meal) {
+	  var caloriesNodes = $('.' + meal + '-food-item-calories');
+	  var totalCalories = 0;
+	  caloriesNodes.each(function (index) {
+	    totalCalories += parseInt(caloriesNodes[index].innerText);
+	  });
+	  renderTotalCalories(meal, totalCalories);
+	};
+
+	var renderTotalCalories = function renderTotalCalories(meal, totalCalories) {
+	  $('#' + meal + '-total-calories-count').append('<p class="calories-total-amount"><strong>' + totalCalories + '</strong></p>');
 	};
 
 	module.exports = {
@@ -685,7 +707,7 @@
 
 
 	// module
-	exports.push([module.id, ".breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container h3 {\n    margin: 0;\n    font-weight: 100; }\n  .meals-container .meal-table {\n    padding: 20px; }\n", ""]);
+	exports.push([module.id, ".breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container h3 {\n    margin: 0;\n    font-weight: 100; }\n  .meals-container .meal-table {\n    padding: 20px; }\n\n.total-calories {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.total-calories {\n  display: flex;\n  height: 25px;\n  align-items: center;\n  justify-content: space-between;\n  width: 250px; }\n\n.calories-total-amount {\n  padding-right: 5px; }\n", ""]);
 
 	// exports
 
