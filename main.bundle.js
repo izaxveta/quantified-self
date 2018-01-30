@@ -54,7 +54,7 @@
 	$(document).ready(function () {
 	  var fileName = location.pathname.split('/').slice(-1)[0];
 
-	  if (fileName === 'foods.html') {
+	  if (fileName === 'foods.html' || fileName === 'foods') {
 	    foodsRequests.getFoods();
 	  } else {
 	    foodsDiary.getDiaryFoods();
@@ -296,7 +296,7 @@
 	};
 
 	var renderDiaryFood = function renderDiaryFood(food) {
-	  $('#food-table-info').prepend('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n     <div class="checkbox-container">\n      <input id="food-item-' + food.id + '" type="checkbox" class="food-item-checkbox">\n     </div>\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="food-item-calories">' + food.calories + '</p>\n    </article>');
+	  $('#diary-food-table-info').prepend('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n     <div class="checkbox-container">\n      <input id="food-item-' + food.id + '" type="checkbox" class="food-item-checkbox">\n     </div>\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="food-item-calories">' + food.calories + '</p>\n    </article>');
 	};
 
 	var calculateTotalCalories = function calculateTotalCalories() {
