@@ -1,14 +1,15 @@
+h3, h4 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: 100;
+}
+
 .breakfast-table {
   width: 300px;
 }
 
 .meals-container {
   display: flex;
-
-  h3 {
-    margin: 0;
-    font-weight: 100;
-  }
 
   .meal-table {
     padding: 20px;
