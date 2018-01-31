@@ -260,6 +260,8 @@
 	    });
 	  }).then(function (meals) {
 	    return calculateTotalCalories();
+	  }).then(function () {
+	    return populateRemainingCalories();
 	  }).catch(function (error) {
 	    return console.error({ error: error });
 	  });
@@ -317,6 +319,36 @@
 
 	var renderTotalCalories = function renderTotalCalories(meal, totalCalories) {
 	  $('#' + meal + '-total-calories-count').append('<p class="calories-total-amount"><strong>' + totalCalories + '</strong></p>');
+	};
+
+	var populateRemainingCalories = function populateRemainingCalories() {
+	  var mealCalorieLimits = [['breakfast', 400], ['snacks', 200], ['lunch', 600], ['dinner', 800]];
+	  mealCalorieLimits.forEach(function (meal) {
+	    return getTotalCalorieCounts(meal);
+	  });
+	};
+
+	var getTotalCalorieCounts = function getTotalCalorieCounts(meal) {
+	  var totalCalories = parseInt($('#' + meal[0] + '-total-calories-count').children('p').text());
+	  calculateRemainingCalories(meal, totalCalories);
+	};
+
+	var calculateRemainingCalories = function calculateRemainingCalories(meal, totalCalories) {
+	  var remainingCalories = meal[1] - totalCalories;
+	  renderRemainingCalories(meal, remainingCalories);
+	};
+
+	var renderRemainingCalories = function renderRemainingCalories(meal, remainingCalories) {
+	  $('#' + meal[0] + '-remaining-calories-count').append('<p class=\'total-remaining-calories\'><strong>' + remainingCalories + '</strong></p>');
+	  styleRemainingCalorieCount(meal, remainingCalories);
+	};
+
+	var styleRemainingCalorieCount = function styleRemainingCalorieCount(meal, remainingCalories) {
+	  if (remainingCalories < 0) {
+	    $('#' + meal[0] + '-remaining-calories-count').addClass('negative-remainder');
+	  } else {
+	    $('#' + meal[0] + '-remaining-calories-count').addClass('positive-remainder');
+	  }
 	};
 
 	module.exports = {
@@ -707,7 +739,7 @@
 
 
 	// module
-	exports.push([module.id, ".breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container h3 {\n    margin: 0;\n    font-weight: 100; }\n  .meals-container .meal-table {\n    padding: 20px; }\n\n.total-calories {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.total-calories {\n  display: flex;\n  height: 25px;\n  align-items: center;\n  justify-content: space-between;\n  width: 250px; }\n\n.calories-total-amount {\n  padding-right: 5px; }\n", ""]);
+	exports.push([module.id, ".breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container h3 {\n    margin: 0;\n    font-weight: 100; }\n  .meals-container .meal-table {\n    padding: 20px; }\n\n.total-calories, .remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.remaining-calories {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories {\n  display: flex;\n  justify-content: flex-end;\n  padding-right: 5px; }\n\n.total-calories {\n  display: flex;\n  height: 25px;\n  align-items: center;\n  justify-content: space-between;\n  width: 250px; }\n\n.calories-total-amount {\n  padding-right: 5px; }\n\n.positive-remainder {\n  color: #009600; }\n\n.negative-remainder {\n  color: tomato; }\n\n.remaining-calories {\n  width: 250px; }\n  .remaining-calories .remaining-calories-header {\n    width: 100%;\n    border-top: 0; }\n  .remaining-calories .total-remaining-calories {\n    width: 50px;\n    border-left: 0;\n    border-top: 0; }\n", ""]);
 
 	// exports
 
