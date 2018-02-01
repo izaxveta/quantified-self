@@ -114,3 +114,24 @@ h3, h4 {
     margin-bottom: 5px;
   }
 }
+.food-diary-controls {
+  width: 254px;
+
+  .meal-add-buttons {
+    width: 100%;
+    height: 75px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+
+  .button-row-1, .button-row-2 {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+}
