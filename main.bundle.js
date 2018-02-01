@@ -439,12 +439,10 @@
 	  getMeals: getMeals,
 	  deleteFoodFromMeal: deleteFoodFromMeal,
 	  handleResponse: handleResponse,
-	  renderFoodToMealTable: renderFoodToMealTable,
 	  getMeals: getMeals,
-	  deleteFoodFromMeal: deleteFoodFromMeal
-	};
+	  deleteFoodFromMeal: deleteFoodFromMeal,
+	  renderFoodToMealTable: renderFoodToMealTable
 
-/***/ }),
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
