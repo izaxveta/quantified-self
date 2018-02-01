@@ -158,17 +158,27 @@
   <div class="food-diary-controls">
     <h3>Foods</h3>
     <a href="/foods.html"><button class="default-button">Create New</button></a>
-    <article class="food-headers">
-      <p class="name-header">
-        <strong>Name</strong>
-      </p>
-      <p class="calorie-header">
-        <strong>Calories</strong>
-      </p>
-      <div class="hidden"></div>
-    </article>
-    <div id="diary-food-table-info"></div>
+  <div class="foods-diary-container">
+    <div class="food-filter-container">
+      <form id="food-name-filter">
+        <label for="name-filter">Filter by Name</label>
+        <input id="food-filter-input">
+      </form>
+    </div>
+    <div>
+      <article class="food-headers">
+        <p class="name-header">
+          <strong>Name</strong>
+        </p>
+        <p class="calorie-header">
+          <strong>Calories</strong>
+        </p>
+        <div class="hidden"></div>
+      </article>
+      <div id="diary-food-table-info"></div>
+    </div>
   </div>
+</div>
   <script
     src='https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'>
   </script>
