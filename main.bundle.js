@@ -103,7 +103,7 @@
 	  checkedFoods.each(function (index) {
 	    var food = setFoodData(checkedFoods[index]);
 	    var meal = $(event.target).attr('data');
-	    renderAddedFoodToMealTable(meal, food);
+	    foodsDiary.renderFoodToMealTable(meal, food);
 	  });
 	};
 
@@ -114,10 +114,6 @@
 	    name: $($(foodNode).find('p')[0]).text(),
 	    calories: $($(foodNode).find('p')[1]).text()
 	  };
-	};
-
-	var renderAddedFoodToMealTable = function renderAddedFoodToMealTable(meal, food) {
-	  $('#' + meal + '-table-info').append('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="' + meal + '-food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" aria-label="Delete">-</button>\n      </div>\n    </article>');
 	};
 
 	var filterFoods = function filterFoods() {
@@ -330,7 +326,8 @@
 	};
 
 	var renderFoodToMealTable = function renderFoodToMealTable(meal, food) {
-	  $('#' + meal.name.toLowerCase() + '-table-info').append('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="' + meal.name.toLowerCase() + '-food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" data="' + meal.name.toLowerCase() + '-meal" aria-label="Delete">-</button>\n      </div>\n    </article>');
+	  var mealName = meal.name ? meal.name.toLowerCase() : meal;
+	  $('#' + mealName + '-table-info').append('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="' + mealName + '-food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" data="' + mealName + '-meal" aria-label="Delete">-</button>\n      </div>\n    </article>');
 	};
 
 	var handleResponse = function handleResponse(response) {
@@ -437,7 +434,8 @@
 	module.exports = {
 	  getDiaryFoods: getDiaryFoods,
 	  getMeals: getMeals,
-	  deleteFoodFromMeal: deleteFoodFromMeal
+	  deleteFoodFromMeal: deleteFoodFromMeal,
+	  renderFoodToMealTable: renderFoodToMealTable
 	};
 
 /***/ }),
