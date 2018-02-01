@@ -441,7 +441,10 @@
 	  handleResponse: handleResponse,
 	  getMeals: getMeals,
 	  deleteFoodFromMeal: deleteFoodFromMeal,
-	  renderFoodToMealTable: renderFoodToMealTable
+	  renderFoodToMealTable: renderFoodToMealTable,
+	  renderFoodToMealTable: renderFoodToMealTable,
+	  getMeals: getMeals
+	};
 
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
