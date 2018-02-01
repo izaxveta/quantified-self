@@ -436,7 +436,8 @@
 
 	module.exports = {
 	  getDiaryFoods: getDiaryFoods,
-	  getMeals: getMeals
+	  getMeals: getMeals,
+	  deleteFoodFromMeal: deleteFoodFromMeal
 	};
 
 /***/ }),
