@@ -89,7 +89,9 @@
 
 	var filterFoods = function filterFoods() {
 	  var filter = $('#food-filter-input').val().toUpperCase();
-	  var foodNameNodes = $('.food-item-name');
+
+	  var foodNameNodes = findNodesForFilter();
+
 	  for (var i = 0; i < foodNameNodes.length; i++) {
 	    var name = $(foodNameNodes[i]);
 	    if (name.text().toUpperCase().indexOf(filter) > -1) {
@@ -127,6 +129,16 @@
 	var clearAlerts = function clearAlerts() {
 	  $('#name-notice').css('display', 'none');
 	  $('#calories-notice').css('display', 'none');
+	};
+
+	var findNodesForFilter = function findNodesForFilter() {
+	  var fileName = location.pathname.split('/').slice(-1)[0];
+	  if (fileName === 'foods.html' || fileName === 'foods') {
+	    var foodNameNodes = $('.food-item-name');
+	  } else {
+	    var foodNameNodes = $('div.foods-diary-container .food-item-name');
+	  }
+	  return foodNameNodes;
 	};
 
 /***/ }),
@@ -263,9 +275,9 @@
 	  }).then(function () {
 	    return populateRemainingCalories();
 	  }).then(function () {
-	    return renderTotalCaloriesConsumed();
+	    return calculateDiaryTotalCaloriesConsumed();
 	  }).then(function () {
-	    return renderDiaryTotalRemainingCalories();
+	    return calculateDiaryRemainingCalories();
 	  }).catch(function (error) {
 	    return console.error({ error: error });
 	  });
@@ -355,33 +367,31 @@
 	  }
 	};
 
-	var diaryCaloriesConsumed = function diaryCaloriesConsumed() {
+	var calculateDiaryTotalCaloriesConsumed = function calculateDiaryTotalCaloriesConsumed() {
 	  var caloriesConsumed = $('.calories-total-amount');
 	  var totalConsumed = 0;
 	  caloriesConsumed.each(function (index) {
 	    totalConsumed += parseInt(caloriesConsumed[index].innerText);
 	  });
-	  return totalConsumed;
+	  renderTotalCaloriesConsumed(totalConsumed);
 	};
 
-	var renderTotalCaloriesConsumed = function renderTotalCaloriesConsumed() {
-	  var total = diaryCaloriesConsumed();
+	var renderTotalCaloriesConsumed = function renderTotalCaloriesConsumed(total) {
 	  $('#diary-calories-consumed-count').append('<p class=\'diary-total-calories-consumed\'><strong>' + total + '</strong></p>');
 	};
 
-	var diaryRemainingCalories = function diaryRemainingCalories() {
+	var calculateDiaryRemainingCalories = function calculateDiaryRemainingCalories() {
 	  var remainingCalories = $('p.total-remaining-calories');
 	  var diaryTotalRemaining = 0;
 	  remainingCalories.each(function (index) {
 	    diaryTotalRemaining += parseInt(remainingCalories[index].innerText);
 	  });
-	  return diaryTotalRemaining;
+	  renderDiaryTotalRemainingCalories(diaryTotalRemaining);
 	};
 
-	var renderDiaryTotalRemainingCalories = function renderDiaryTotalRemainingCalories() {
-	  var totalRemaining = diaryRemainingCalories();
-	  $('#diary-remaining-calories-count').append('<p class=\'diary-total-remaining-calories\'><strong>' + totalRemaining + '</strong></p>');
-	  styleRemainingCalorieCount("diary", totalRemaining);
+	var renderDiaryTotalRemainingCalories = function renderDiaryTotalRemainingCalories(total) {
+	  $('#diary-remaining-calories-count').append('<p class=\'diary-total-remaining-calories\'><strong>' + total + '</strong></p>');
+	  styleRemainingCalorieCount("diary", total);
 	};
 
 	module.exports = {
@@ -772,7 +782,7 @@
 
 
 	// module
-	exports.push([module.id, ".breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container h3 {\n    margin: 0;\n    font-weight: 100; }\n  .meals-container .meal-table {\n    padding: 20px; }\n\n.total-calories, .remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.remaining-calories {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories, .calories-goal, .diary-total-calories-consumed {\n  display: flex;\n  justify-content: flex-end;\n  padding-right: 5px; }\n\n.total-calories {\n  display: flex;\n  height: 25px;\n  align-items: center;\n  justify-content: space-between;\n  width: 248px; }\n\n.calories-total-amount {\n  padding-right: 5px; }\n\n.positive-remainder {\n  color: #009600; }\n\n.negative-remainder {\n  color: tomato; }\n\n.remaining-calories {\n  width: 255px; }\n  .remaining-calories .remaining-calories-header {\n    width: 100%;\n    border-top: 0; }\n  .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n    width: 50px;\n    border-left: 0;\n    border-top: 0; }\n\n.calories-consumed {\n  border-top: none; }\n", ""]);
+	exports.push([module.id, "h3, h4 {\n  margin-top: 10px;\n  margin-bottom: 10px;\n  font-weight: 100; }\n\n.breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container .meal-table {\n    padding: 20px; }\n\n.total-calories, .remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.remaining-calories {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories, .calories-goal, .diary-total-calories-consumed {\n  display: flex;\n  justify-content: flex-end;\n  padding-right: 5px; }\n\n.total-calories {\n  display: flex;\n  height: 25px;\n  align-items: center;\n  justify-content: space-between;\n  width: 248px; }\n\n.calories-total-amount {\n  padding-right: 5px; }\n\n.positive-remainder {\n  color: #009600; }\n\n.negative-remainder {\n  color: tomato; }\n\n.remaining-calories {\n  width: 255px; }\n  .remaining-calories .remaining-calories-header {\n    width: 100%;\n    border-top: 0; }\n  .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n    width: 50px;\n    border-left: 0;\n    border-top: 0; }\n\n.calories-consumed {\n  border-top: none; }\n\n.default-button {\n  background-color: #56ccf2;\n  height: 30px;\n  width: 110px;\n  border: 1px solid black;\n  border-radius: 30px;\n  font-weight: bold; }\n", ""]);
 
 	// exports
 
