@@ -70,7 +70,7 @@
 	    if (event.target.nodeName == 'BUTTON') {
 	      var id = event.target.id.split('-')[2];
 	      foodsRequests.deleteFood(id);
-	      foodsRequests.removeFoodRow();
+	      removeFoodRow();
 	    }
 	  });
 
@@ -84,6 +84,15 @@
 
 	  $('#food-filter-input').on('keyup', function (event) {
 	    filterFoods();
+	  });
+
+	  $('.meal-table').on('click', function (event) {
+	    if (event.target.nodeName == 'BUTTON') {
+	      var foodId = event.target.id.split('-')[2];
+	      var mealName = $(event.target).attr('data').split('-')[0];
+	      foodsDiary.deleteFoodFromMeal(mealName, foodId);
+	      removeFoodRow();
+	    }
 	  });
 	});
 
@@ -141,6 +150,10 @@
 	  return foodNameNodes;
 	};
 
+	var removeFoodRow = function removeFoodRow() {
+	  event.target.closest('article').remove();
+	};
+
 /***/ }),
 /* 1 */
 /***/ (function(module, exports) {
@@ -161,10 +174,6 @@
 	  fetch('https://ivmh-qs-api.herokuapp.com/api/v1/foods/' + id, {
 	    method: 'DELETE'
 	  });
-	};
-
-	var removeFoodRow = function removeFoodRow() {
-	  event.target.closest('article').remove();
 	};
 
 	var addNewFood = function addNewFood() {
@@ -242,7 +251,6 @@
 	module.exports = {
 	  getFoods: getFoods,
 	  deleteFood: deleteFood,
-	  removeFoodRow: removeFoodRow,
 	  addNewFood: addNewFood,
 	  updateFood: updateFood
 	};
@@ -283,6 +291,14 @@
 	  });
 	};
 
+	var deleteFoodFromMeal = function deleteFoodFromMeal(mealName, foodId) {
+	  var mealInfo = { 'breakfast': '1', 'snack': '2', 'lunch': '3', 'dinner': '4' };
+	  var mealId = mealInfo['' + mealName];
+	  fetch('https://ivmh-qs-api.herokuapp.com/api/v1/meals/' + mealId + '/foods/' + foodId, {
+	    method: 'DELETE'
+	  });
+	};
+
 	var populateMealTable = function populateMealTable(meal) {
 	  meal.foods.forEach(function (food) {
 	    return renderFoodToMealTable(meal, food);
@@ -290,7 +306,7 @@
 	};
 
 	var renderFoodToMealTable = function renderFoodToMealTable(meal, food) {
-	  $('#' + meal.name.toLowerCase() + '-table-info').append('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="' + meal.name.toLowerCase() + '-food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" aria-label="Delete">-</button>\n      </div>\n    </article>');
+	  $('#' + meal.name.toLowerCase() + '-table-info').append('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="' + meal.name.toLowerCase() + '-food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" data="' + meal.name.toLowerCase() + '-meal" aria-label="Delete">-</button>\n      </div>\n    </article>');
 	};
 
 	var handleResponse = function handleResponse(response) {
@@ -396,7 +412,8 @@
 
 	module.exports = {
 	  getDiaryFoods: getDiaryFoods,
-	  getMeals: getMeals
+	  getMeals: getMeals,
+	  deleteFoodFromMeal: deleteFoodFromMeal
 	};
 
 /***/ }),
