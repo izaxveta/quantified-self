@@ -61,6 +61,8 @@
 	    foodsDiary.getMeals();
 	  }
 
+	  $('.meal-add-buttons').on('click', addNewFoodsToMeal);
+
 	  $('#submit-food').on('click', function (event) {
 	    event.preventDefault();
 	    newFoodSequence();
@@ -95,6 +97,28 @@
 	    }
 	  });
 	});
+
+	var addNewFoodsToMeal = function addNewFoodsToMeal() {
+	  var checkedFoods = $('.food-item-checkbox:checkbox:checked');
+	  checkedFoods.each(function (index) {
+	    var food = setFoodData(checkedFoods[index]);
+	    var meal = $(event.target).attr('data');
+	    renderAddedFoodToMealTable(meal, food);
+	  });
+	};
+
+	var setFoodData = function setFoodData(food) {
+	  var foodNode = $(food).parents('article')[0];
+	  return {
+	    id: $(foodNode).attr('data').split('-')[1],
+	    name: $($(foodNode).find('p')[0]).text(),
+	    calories: $($(foodNode).find('p')[1]).text()
+	  };
+	};
+
+	var renderAddedFoodToMealTable = function renderAddedFoodToMealTable(meal, food) {
+	  $('#' + meal + '-table-info').append('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="' + meal + '-food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" aria-label="Delete">-</button>\n      </div>\n    </article>');
+	};
 
 	var filterFoods = function filterFoods() {
 	  var filter = $('#food-filter-input').val().toUpperCase();
@@ -413,7 +437,9 @@
 	module.exports = {
 	  getDiaryFoods: getDiaryFoods,
 	  getMeals: getMeals,
-	  deleteFoodFromMeal: deleteFoodFromMeal
+	  deleteFoodFromMeal: deleteFoodFromMeal,
+	  handleResponse: handleResponse,
+	  renderFoodToMealTable: renderFoodToMealTable
 	};
 
 /***/ }),
