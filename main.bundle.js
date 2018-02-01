@@ -440,7 +440,8 @@
 	  deleteFoodFromMeal: deleteFoodFromMeal,
 	  handleResponse: handleResponse,
 	  renderFoodToMealTable: renderFoodToMealTable,
-	  getMeals: getMeals
+	  getMeals: getMeals,
+	  deleteFoodFromMeal: deleteFoodFromMeal
 	};
 
 /***/ }),
