@@ -56,6 +56,12 @@ h3, h4 {
   color: tomato;
 }
 
+%remaining-calories {
+  height: 11px;
+  padding-top: 4px;
+  padding-bottom: 9px;
+}
+
 .remaining-calories {
   @extend %format-row;
   width: 255px;
@@ -63,6 +69,7 @@ h3, h4 {
   .remaining-calories-header {
     @extend %format-header;
     @extend %display-right;
+    @extend %remaining-calories;
     width: 100%;
     border-top: 0;
   }
@@ -73,6 +80,7 @@ h3, h4 {
     width: 50px;
     border-left: 0;
     border-top: 0;
+    @extend %remaining-calories;
   }
 }
 
