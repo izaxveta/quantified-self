@@ -61,6 +61,8 @@
 	    foodsDiary.getMeals();
 	  }
 
+	  $('.meal-add-buttons').on('click', addNewFoodsToMeal);
+
 	  $('#submit-food').on('click', function (event) {
 	    event.preventDefault();
 	    newFoodSequence();
@@ -95,6 +97,28 @@
 	    }
 	  });
 	});
+
+	var addNewFoodsToMeal = function addNewFoodsToMeal() {
+	  var checkedFoods = $('.food-item-checkbox:checkbox:checked');
+	  checkedFoods.each(function (index) {
+	    var food = setFoodData(checkedFoods[index]);
+	    var meal = $(event.target).attr('data');
+	    renderAddedFoodToMealTable(meal, food);
+	  });
+	};
+
+	var setFoodData = function setFoodData(food) {
+	  var foodNode = $(food).parents('article')[0];
+	  return {
+	    id: $(foodNode).attr('data').split('-')[1],
+	    name: $($(foodNode).find('p')[0]).text(),
+	    calories: $($(foodNode).find('p')[1]).text()
+	  };
+	};
+
+	var renderAddedFoodToMealTable = function renderAddedFoodToMealTable(meal, food) {
+	  $('#' + meal + '-table-info').append('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="' + meal + '-food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" aria-label="Delete">-</button>\n      </div>\n    </article>');
+	};
 
 	var filterFoods = function filterFoods() {
 	  var filter = $('#food-filter-input').val().toUpperCase();
@@ -799,7 +823,7 @@
 
 
 	// module
-	exports.push([module.id, "h3, h4 {\n  margin-top: 10px;\n  margin-bottom: 10px;\n  font-weight: 100; }\n\n.breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container .meal-table {\n    padding: 20px; }\n\n.total-calories, .remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.remaining-calories {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories, .calories-goal, .diary-total-calories-consumed {\n  display: flex;\n  justify-content: flex-end;\n  padding-right: 5px; }\n\n.total-calories {\n  display: flex;\n  height: 25px;\n  align-items: center;\n  justify-content: space-between;\n  width: 248px; }\n\n.calories-total-amount {\n  padding-right: 5px; }\n\n.positive-remainder {\n  color: #009600; }\n\n.negative-remainder {\n  color: tomato; }\n\n.remaining-calories {\n  width: 255px; }\n  .remaining-calories .remaining-calories-header {\n    width: 100%;\n    border-top: 0; }\n  .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n    width: 50px;\n    border-left: 0;\n    border-top: 0; }\n\n.calories-consumed {\n  border-top: none; }\n\n.default-button {\n  background-color: #56ccf2;\n  height: 30px;\n  width: 110px;\n  border: 1px solid black;\n  border-radius: 30px;\n  font-weight: bold; }\n", ""]);
+	exports.push([module.id, "h3, h4 {\n  margin-top: 10px;\n  margin-bottom: 10px;\n  font-weight: 100; }\n\n.breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container .meal-table {\n    padding: 20px; }\n\n.total-calories, .remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.remaining-calories {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories, .calories-goal, .diary-total-calories-consumed {\n  display: flex;\n  justify-content: flex-end;\n  padding-right: 5px; }\n\n.total-calories {\n  display: flex;\n  height: 25px;\n  align-items: center;\n  justify-content: space-between;\n  width: 248px; }\n\n.calories-total-amount {\n  padding-right: 5px; }\n\n.positive-remainder {\n  color: #009600; }\n\n.negative-remainder {\n  color: tomato; }\n\n.remaining-calories {\n  width: 255px; }\n  .remaining-calories .remaining-calories-header {\n    width: 100%;\n    border-top: 0; }\n  .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n    width: 50px;\n    border-left: 0;\n    border-top: 0; }\n\n.calories-consumed {\n  border-top: none; }\n\n.default-button {\n  background-color: #56ccf2;\n  height: 30px;\n  width: 110px;\n  border: 1px solid black;\n  border-radius: 30px;\n  font-weight: bold; }\n\n.food-diary-controls {\n  width: 254px; }\n  .food-diary-controls .meal-add-buttons {\n    width: 100%;\n    height: 75px;\n    display: flex;\n    flex-direction: column;\n    justify-content: space-between;\n    margin-top: 10px;\n    margin-bottom: 10px; }\n  .food-diary-controls .button-row-1, .food-diary-controls .button-row-2 {\n    width: 100%;\n    display: flex;\n    justify-content: space-between;\n    margin-top: 5px;\n    margin-bottom: 5px; }\n", ""]);
 
 	// exports
 
