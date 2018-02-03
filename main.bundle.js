@@ -52,6 +52,9 @@
 	__webpack_require__(7);
 
 	$(document).ready(function () {
+	  var originalOrder = [];
+	  calorieSorter(originalOrder);
+
 	  var fileName = location.pathname.split('/').slice(-1)[0];
 
 	  if (fileName === 'foods.html' || fileName === 'foods') {
@@ -213,6 +216,48 @@
 	  event.target.closest('article').remove();
 	};
 
+	var calorieSorter = function calorieSorter(originalOrder) {
+	  var count = 0;
+
+	  $('strong.calorie-sort').on('click', function (event) {
+	    if (originalOrder.length === 0) {
+	      var order = $('div.all-foods-list article.food-item-row');
+	      order.each(function (index) {
+	        originalOrder.push(order[index]);
+	      });
+	    } else if (originalOrder.length != $('div.all-foods-list article.food-item-row').length) {
+	      originalOrder.splice(0, originalOrder.length);
+	      var order = $('div.all-foods-list article.food-item-row');
+	      order.each(function (index) {
+	        originalOrder.push(order[index]);
+	      });
+	    }
+	    count += 1;
+	    var calorieNodes = $('div.all-foods-list article.food-item-row');
+	    sortBy(calorieNodes, count, originalOrder);
+	  });
+	};
+
+	var sortBy = function sortBy(calorieNodes, clickCount, originalOrder) {
+	  if (clickCount === 1 || clickCount % 3 === 1) {
+	    var sorted = calorieNodes.sort(function (a, b) {
+	      var calA = $(a).children('.food-item-calories')[0].innerText;
+	      var calB = $(b).children('.food-item-calories')[0].innerText;
+	      return calA - calB;
+	    });
+	    $('div.all-foods-list').append(sorted);
+	  } else if (clickCount === 2 || clickCount % 3 === 2) {
+	    var sorted = calorieNodes.sort(function (a, b) {
+	      var calA = $(a).children('.food-item-calories')[0].innerText;
+	      var calB = $(b).children('.food-item-calories')[0].innerText;
+	      return calB - calA;
+	    });
+	    $('div.all-foods-list').append(sorted);
+	  } else {
+	    $('div.all-foods-list').append(originalOrder);
+	  }
+	};
+
 /***/ }),
 /* 1 */
 /***/ (function(module, exports) {
@@ -285,7 +330,7 @@
 	};
 
 	var renderFood = function renderFood(food) {
-	  $('#food-table-info').prepend('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name" contenteditable="true">' + food.name + '</p>\n      <p class="food-item-calories" contenteditable="true">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" aria-label="Delete">-</button>\n      </div>\n    </article>');
+	  $('#food-table-info').prepend('<article class="food-item-row food-item-' + food.id + '" data="food-' + food.id + '">\n      <p class="food-item-name" contenteditable="true">' + food.name + '</p>\n      <p class="food-item-calories" contenteditable="true">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" aria-label="Delete">-</button>\n      </div>\n    </article>');
 	};
 
 	var updateFood = function updateFood(id) {
@@ -366,7 +411,7 @@
 
 	var renderFoodToMealTable = function renderFoodToMealTable(meal, food) {
 	  var mealName = meal.name ? meal.name.toLowerCase() : meal;
-	  $('#' + mealName + '-table-info').append('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="' + mealName + '-food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" data="' + mealName + '-meal" aria-label="Delete">-</button>\n      </div>\n    </article>');
+	  $('#' + mealName + '-table-info').append('<article class="food-item-row food-item-' + food.id + '" data="food-' + food.id + '">\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="' + mealName + '-food-item-calories">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" data="' + mealName + '-meal" aria-label="Delete">-</button>\n      </div>\n    </article>');
 	};
 
 	var handleResponse = function handleResponse(response) {
@@ -390,7 +435,7 @@
 	};
 
 	var renderDiaryFood = function renderDiaryFood(food) {
-	  $('#diary-food-table-info').prepend('<article class="food-item-' + food.id + '" id="food-item-row" data="food-' + food.id + '">\n     <div class="checkbox-container">\n      <input id="food-item-' + food.id + '" type="checkbox" class="food-item-checkbox">\n     </div>\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="food-item-calories">' + food.calories + '</p>\n    </article>');
+	  $('#diary-food-table-info').prepend('<article class="food-item-row food-item-' + food.id + '" data="food-' + food.id + '">\n     <div class="checkbox-container">\n      <input id="food-item-' + food.id + '" type="checkbox" class="food-item-checkbox">\n     </div>\n      <p class="food-item-name">' + food.name + '</p>\n      <p class="food-item-calories">' + food.calories + '</p>\n    </article>');
 	};
 
 	var calculateTotalCalories = function calculateTotalCalories() {
@@ -513,7 +558,7 @@
 
 
 	// module
-	exports.push([module.id, ".food-headers, #food-item-row {\n  width: 300px;\n  display: flex;\n  justify-content: space-between; }\n\n.food-headers, #food-item-row {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.food-headers .name-header, .food-headers .calorie-header {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.food-headers .name-header {\n  width: 200px; }\n\n.food-headers .calorie-header {\n  width: 60px;\n  padding-right: 5px;\n  border-left: 0px; }\n\n.food-headers .hidden {\n  width: 50px; }\n\n#food-item-row .food-item-name {\n  width: 200px; }\n\n#food-item-row .food-item-calories {\n  width: 50px; }\n\n#food-item-row .button-container {\n  width: 25px; }\n  #food-item-row .button-container .food-item-delete-btn {\n    color: white;\n    height: 20px;\n    width: 20px;\n    border: 1px solid tomato;\n    border-radius: 30px;\n    background-color: tomato;\n    text-align: center; }\n\n#name-notice {\n  display: none;\n  color: tomato; }\n\n#calories-notice {\n  display: none;\n  color: tomato; }\n", ""]);
+	exports.push([module.id, ".food-headers, .food-item-row {\n  width: 300px;\n  display: flex;\n  justify-content: space-between; }\n\n.food-headers, .food-item-row {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.food-headers .name-header, .food-headers .calorie-header {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.food-headers .name-header {\n  width: 200px; }\n\n.food-headers .calorie-header {\n  width: 60px;\n  padding-right: 5px;\n  border-left: 0px; }\n\n.food-headers .hidden {\n  width: 50px; }\n\n.food-item-row .food-item-name {\n  width: 200px; }\n\n.food-item-row .food-item-calories {\n  width: 50px; }\n\n.food-item-row .button-container {\n  width: 25px; }\n  .food-item-row .button-container .food-item-delete-btn {\n    color: white;\n    height: 20px;\n    width: 20px;\n    border: 1px solid tomato;\n    border-radius: 30px;\n    background-color: tomato;\n    text-align: center; }\n\n#name-notice {\n  display: none;\n  color: tomato; }\n\n#calories-notice {\n  display: none;\n  color: tomato; }\n", ""]);
 
 	// exports
 
