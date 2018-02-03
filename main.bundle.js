@@ -94,40 +94,67 @@
 	    if (event.target.nodeName == 'BUTTON') {
 	      var foodId = event.target.id.split('-')[2];
 	      var mealName = $(event.target).attr('data').split('-')[0];
-	      foodsDiary.deleteFoodFromMeal(mealName, foodId);
+	      foodsDiary.updateMealWithFood(mealName, foodId, 'DELETE');
 	      removeFoodRow();
+	      updateMealCalories(setFoodData(event.target), mealName, 'decreaseMeal');
 	    }
 	  });
 	});
 
-	var updateMealCalories = function updateMealCalories(food, meal) {
-	  updateMealTable(food, meal);
-	  updateTotalsTable(food);
+	var updateMealCalories = function updateMealCalories(food, meal, method) {
+	  updateMealTable(food, meal, method);
+	  updateTotalsTable(food, method);
 	};
 
-	var updateMealTable = function updateMealTable(food, meal) {
+	var updateMealTable = function updateMealTable(food, meal, method) {
 	  var currentCaloriesNode = $('#' + meal + '-total-calories-count').find('p');
 	  var totalCaloriesNode = getRemainingCaloriesValue(meal);
-	  updateRemainingCaloriesValue(food, meal, totalCaloriesNode);
-	  updateTotalCaloriesValue(food, currentCaloriesNode);
+	  updateTotalCaloriesValue(food, currentCaloriesNode, method);
+	  updateRemainingCaloriesValue(food, meal, totalCaloriesNode, method);
 	};
 
-	var updateTotalsTable = function updateTotalsTable(food) {
+	var updateTotalsTable = function updateTotalsTable(food, method) {
 	  var totalDiaryConsumedNode = $('.diary-total-calories-consumed');
 	  var currentDiaryRemainingCaloriesNode = getRemainingCaloriesValue('diary');
-	  updateTotalCaloriesValue(food, totalDiaryConsumedNode);
-	  updateRemainingCaloriesValue(food, 'diary', currentDiaryRemainingCaloriesNode);
+	  updateTotalCaloriesValue(food, totalDiaryConsumedNode, method);
+	  updateRemainingCaloriesValue(food, 'diary', currentDiaryRemainingCaloriesNode, method);
 	};
 
-	var updateRemainingCaloriesValue = function updateRemainingCaloriesValue(food, meal, currentCaloriesNode) {
-	  var updatedRemainingCalories = currentCaloriesNode.text() - food.calories;
+	var updateRemainingCaloriesValue = function updateRemainingCaloriesValue(food, meal, currentCaloriesNode, method) {
+	  if (method == 'decreaseMeal') {
+	    var operator = '+';
+	  } else {
+	    var operator = '-';
+	  }
+	  var totalCalories = parseInt(currentCaloriesNode.text());
+	  var foodCalories = parseInt(food.calories);
+	  var updatedRemainingCalories = calculateTotals(operator, totalCalories, foodCalories);
 	  updateNodeValue(currentCaloriesNode, updatedRemainingCalories);
 	  foodsDiary.styleRemainingCalorieCount(meal, updatedRemainingCalories);
 	};
 
-	var updateTotalCaloriesValue = function updateTotalCaloriesValue(food, totalCaloriesNode) {
-	  var updatedTotalCalories = parseInt($(totalCaloriesNode).text()) + parseInt(food.calories);
+	var updateTotalCaloriesValue = function updateTotalCaloriesValue(food, totalCaloriesNode, method) {
+	  if (method == 'decreaseMeal') {
+	    var operator = '-';
+	  } else {
+	    var operator = '+';
+	  }
+	  var totalCalories = parseInt($(totalCaloriesNode).text());
+	  var foodCalories = parseInt(food.calories);
+	  var updatedTotalCalories = calculateTotals(operator, totalCalories, foodCalories);
 	  updateNodeValue(totalCaloriesNode, updatedTotalCalories);
+	};
+
+	var calculateTotals = function calculateTotals(operator, digit1, digit2) {
+	  var formulate = {
+	    '+': function _(digit1, digit2) {
+	      return digit1 + digit2;
+	    },
+	    '-': function _(digit1, digit2) {
+	      return digit1 - digit2;
+	    }
+	  };
+	  return formulate[operator](digit1, digit2);
 	};
 
 	var getRemainingCaloriesValue = function getRemainingCaloriesValue(meal) {
@@ -144,7 +171,8 @@
 	    var food = setFoodData(checkedFoods[index]);
 	    var meal = $(event.target).attr('data');
 	    foodsDiary.renderFoodToMealTable(meal, food);
-	    updateMealCalories(food, meal);
+	    updateMealCalories(food, meal, 'increaseMeal');
+	    foodsDiary.updateMealWithFood(meal, food.id, 'POST');
 	  });
 	};
 
@@ -389,11 +417,11 @@
 	  });
 	};
 
-	var deleteFoodFromMeal = function deleteFoodFromMeal(mealName, foodId) {
+	var updateMealWithFood = function updateMealWithFood(mealName, foodId, method) {
 	  var mealInfo = { 'breakfast': '1', 'snack': '2', 'lunch': '3', 'dinner': '4' };
 	  var mealId = mealInfo['' + mealName];
 	  fetch('https://ivmh-qs-api.herokuapp.com/api/v1/meals/' + mealId + '/foods/' + foodId, {
-	    method: 'DELETE'
+	    method: '' + method
 	  });
 	};
 
@@ -433,7 +461,7 @@
 	};
 
 	var calculateTotalCalories = function calculateTotalCalories() {
-	  var meals = ["breakfast", "lunch", "dinner", "snacks"];
+	  var meals = ["breakfast", "lunch", "dinner", "snack"];
 	  meals.forEach(function (meal) {
 	    return mealTotalCalories(meal);
 	  });
@@ -453,7 +481,7 @@
 	};
 
 	var populateRemainingCalories = function populateRemainingCalories() {
-	  var mealCalorieLimits = [['breakfast', 400], ['snacks', 200], ['lunch', 600], ['dinner', 800]];
+	  var mealCalorieLimits = [['breakfast', 400], ['snack', 200], ['lunch', 600], ['dinner', 800]];
 	  mealCalorieLimits.forEach(function (meal) {
 	    return getTotalCalorieCounts(meal);
 	  });
@@ -512,7 +540,7 @@
 	module.exports = {
 	  getDiaryFoods: getDiaryFoods,
 	  getMeals: getMeals,
-	  deleteFoodFromMeal: deleteFoodFromMeal,
+	  updateMealWithFood: updateMealWithFood,
 	  renderFoodToMealTable: renderFoodToMealTable,
 	  styleRemainingCalorieCount: styleRemainingCalorieCount
 	};
