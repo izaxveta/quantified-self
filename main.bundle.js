@@ -433,7 +433,7 @@
 	};
 
 	var calculateTotalCalories = function calculateTotalCalories() {
-	  var meals = ["breakfast", "lunch", "dinner", "snacks"];
+	  var meals = ["breakfast", "lunch", "dinner", "snack"];
 	  meals.forEach(function (meal) {
 	    return mealTotalCalories(meal);
 	  });
@@ -453,7 +453,7 @@
 	};
 
 	var populateRemainingCalories = function populateRemainingCalories() {
-	  var mealCalorieLimits = [['breakfast', 400], ['snacks', 200], ['lunch', 600], ['dinner', 800]];
+	  var mealCalorieLimits = [['breakfast', 400], ['snack', 200], ['lunch', 600], ['dinner', 800]];
 	  mealCalorieLimits.forEach(function (meal) {
 	    return getTotalCalorieCounts(meal);
 	  });
