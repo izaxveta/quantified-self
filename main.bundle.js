@@ -174,6 +174,7 @@
 	    updateMealCalories(food, meal, 'increaseMeal');
 	    foodsDiary.updateMealWithFood(meal, food.id, 'POST');
 	  });
+	  clearChecked();
 	};
 
 	var setFoodData = function setFoodData(food) {
@@ -227,6 +228,10 @@
 	var clearAlerts = function clearAlerts() {
 	  $('#name-notice').css('display', 'none');
 	  $('#calories-notice').css('display', 'none');
+	};
+
+	var clearChecked = function clearChecked() {
+	  $('.food-item-checkbox:checkbox:checked').prop('checked', false);
 	};
 
 	var findNodesForFilter = function findNodesForFilter() {
