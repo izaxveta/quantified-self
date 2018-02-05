@@ -80,7 +80,11 @@
 	    var fileName = location.pathname.split('/').slice(-1)[0];
 	    if (fileName === 'foods.html' && event.target.nodeName != 'BUTTON') {
 	      var foodId = event.target.parentElement.attributes.data.value.split('-')[1];
-	      foodsRequests.updateFood(foodId, originalFood);
+	      var foodName = $('.food-item-' + foodId).children()[0].innerText;
+	      var foodCalories = $('.food-item-' + foodId).children()[1].innerText;
+	      if (originalFood.name != foodName || originalFood.calories != foodCalories) {
+	        foodsRequests.updateFood(foodId, foodName, foodCalories);
+	      }
 	    }
 	  });
 
@@ -365,25 +369,21 @@
 	  $('#food-table-info').prepend('<article class="food-item-row food-item-' + food.id + '" data="food-' + food.id + '">\n      <p class="food-item-name" contenteditable="true">' + food.name + '</p>\n      <p class="food-item-calories" contenteditable="true">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" aria-label="Delete">-</button>\n      </div>\n    </article>');
 	};
 
-	var updateFood = function updateFood(id, originalFood) {
-	  var foodName = $('.food-item-' + id).children()[0].innerText;
-	  var foodCalories = $('.food-item-' + id).children()[1].innerText;
-	  if (originalFood.name != foodName || originalFood.calories != foodCalories) {
-	    fetch('https://ivmh-qs-api.herokuapp.com/api/v1/foods/' + id, {
-	      method: 'PUT',
-	      headers: { 'Content-Type': 'application/json' },
-	      body: JSON.stringify({
-	        food: {
-	          name: foodName,
-	          calories: foodCalories
-	        }
-	      })
-	    }).then(function (response) {
-	      return handleResponse(response);
-	    }).catch(function (error) {
-	      return console.error({ error: error });
-	    });
-	  }
+	var updateFood = function updateFood(foodId, foodName, foodCalories) {
+	  fetch('https://ivmh-qs-api.herokuapp.com/api/v1/foods/' + foodId, {
+	    method: 'PUT',
+	    headers: { 'Content-Type': 'application/json' },
+	    body: JSON.stringify({
+	      food: {
+	        name: foodName,
+	        calories: foodCalories
+	      }
+	    })
+	  }).then(function (response) {
+	    return handleResponse(response);
+	  }).catch(function (error) {
+	    return console.error({ error: error });
+	  });
 	};
 
 	module.exports = {
