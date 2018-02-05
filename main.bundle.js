@@ -73,11 +73,14 @@
 
 	  events.deleteFoodListener(foodsRequests);
 
+	  var originalFood = {};
+	  events.setOriginalFoodListener(originalFood);
+
 	  $('#food-table-info').on('focusout', function (event) {
 	    var fileName = location.pathname.split('/').slice(-1)[0];
 	    if (fileName === 'foods.html' && event.target.nodeName != 'BUTTON') {
 	      var foodId = event.target.parentElement.attributes.data.value.split('-')[1];
-	      foodsRequests.updateFood(foodId);
+	      foodsRequests.updateFood(foodId, originalFood);
 	    }
 	  });
 
@@ -362,23 +365,25 @@
 	  $('#food-table-info').prepend('<article class="food-item-row food-item-' + food.id + '" data="food-' + food.id + '">\n      <p class="food-item-name" contenteditable="true">' + food.name + '</p>\n      <p class="food-item-calories" contenteditable="true">' + food.calories + '</p>\n      <div class="button-container">\n        <button id="food-item-' + food.id + '" class="food-item-delete-btn" aria-label="Delete">-</button>\n      </div>\n    </article>');
 	};
 
-	var updateFood = function updateFood(id) {
+	var updateFood = function updateFood(id, originalFood) {
 	  var foodName = $('.food-item-' + id).children()[0].innerText;
 	  var foodCalories = $('.food-item-' + id).children()[1].innerText;
-	  fetch('https://ivmh-qs-api.herokuapp.com/api/v1/foods/' + id, {
-	    method: 'PUT',
-	    headers: { 'Content-Type': 'application/json' },
-	    body: JSON.stringify({
-	      food: {
-	        name: foodName,
-	        calories: foodCalories
-	      }
-	    })
-	  }).then(function (response) {
-	    return handleResponse(response);
-	  }).catch(function (error) {
-	    return console.error({ error: error });
-	  });
+	  if (originalFood.name != foodName || originalFood.calories != foodCalories) {
+	    fetch('https://ivmh-qs-api.herokuapp.com/api/v1/foods/' + id, {
+	      method: 'PUT',
+	      headers: { 'Content-Type': 'application/json' },
+	      body: JSON.stringify({
+	        food: {
+	          name: foodName,
+	          calories: foodCalories
+	        }
+	      })
+	    }).then(function (response) {
+	      return handleResponse(response);
+	    }).catch(function (error) {
+	      return console.error({ error: error });
+	    });
+	  }
 	};
 
 	module.exports = {
@@ -571,9 +576,27 @@
 	  event.target.closest('article').remove();
 	};
 
+	var setOriginalFoodListener = function setOriginalFoodListener(originalFood) {
+	  $('#food-table-info').focusin(function (event) {
+	    if (event.target.nodeName != 'BUTTON') {
+	      return setOriginalFood(originalFood);
+	    }
+	  });
+	};
+
+	var setOriginalFood = function setOriginalFood(originalFood) {
+	  var foodId = event.target.parentElement.attributes.data.value.split('-')[1];
+	  var originalFoodName = $('.food-item-' + foodId).children()[0].innerText;
+	  var originalFoodCalories = $('.food-item-' + foodId).children()[1].innerText;
+	  originalFood.name = originalFoodName;
+	  originalFood.calories = originalFoodCalories;
+	  return originalFood;
+	};
+
 	module.exports = {
 	  deleteFoodListener: deleteFoodListener,
-	  removeFoodRow: removeFoodRow
+	  removeFoodRow: removeFoodRow,
+	  setOriginalFoodListener: setOriginalFoodListener
 	};
 
 /***/ }),
