@@ -1,7 +1,17 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
 h3, h4 {
   margin-top: 10px;
   margin-bottom: 10px;
   font-weight: 100;
+}
+
+input {
+  padding-left: 10px;
 }
 
 .breakfast-table {
@@ -105,6 +115,7 @@ h3, h4 {
 
 .food-diary-controls {
   width: 254px;
+  padding-left: 20px;
 
   .meal-add-buttons {
     width: 100%;
@@ -120,4 +131,16 @@ h3, h4 {
     display: flex;
     justify-content: space-between;
   }
+}
+
+.diary-total-calories-container {
+  padding-left: 20px;
+}
+
+#food-name-filter input, .food-name-container input, .food-calories-container input {
+  height: 20px;
+  border-radius: 20px;
+  border: 1px solid black;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
