@@ -49,33 +49,46 @@
 	var foodsRequests = __webpack_require__(1);
 	var foodsDiary = __webpack_require__(2);
 	var events = __webpack_require__(3);
+	var fileName = location.pathname.split('/').slice(-1)[0];
 	__webpack_require__(4);
 	__webpack_require__(8);
 
 	$(document).ready(function () {
+	  renderData(fileName);
+	  addFoodMealListener();
+	  addFoodMealListener();
+	  addFoodListener();
+	  editFoodListener(fileName, originalFood);
+	  filterFoodListener();
+	  deleteFoodMealListener();
 	  calorieSorter();
+	  events.deleteFoodListener(foodsRequests);
+	  events.setOriginalFoodListener(originalFood);
+	});
 
-	  var fileName = location.pathname.split('/').slice(-1)[0];
+	var originalFood = {};
 
+	var renderData = function renderData(fileName) {
 	  if (fileName === 'foods.html' || fileName === 'foods') {
 	    foodsRequests.getFoods();
 	  } else {
 	    foodsDiary.getDiaryFoods();
 	    foodsDiary.getMeals();
 	  }
+	};
 
+	var addFoodMealListener = function addFoodMealListener() {
 	  $('.meal-add-buttons').on('click', addNewFoodsToMeal);
+	};
 
+	var addFoodListener = function addFoodListener() {
 	  $('#submit-food').on('click', function (event) {
 	    event.preventDefault();
 	    newFoodSequence();
 	  });
+	};
 
-	  events.deleteFoodListener(foodsRequests);
-
-	  var originalFood = {};
-	  events.setOriginalFoodListener(originalFood);
-
+	var editFoodListener = function editFoodListener(fileName, originalFood) {
 	  $('#food-table-info').on('focusout', function (event) {
 	    var fileName = location.pathname.split('/').slice(-1)[0];
 	    if (fileName === 'foods.html' && event.target.nodeName != 'BUTTON') {
@@ -87,11 +100,15 @@
 	      }
 	    }
 	  });
+	};
 
+	var filterFoodListener = function filterFoodListener() {
 	  $('#food-filter-input').on('keyup', function (event) {
 	    filterFoods();
 	  });
+	};
 
+	var deleteFoodMealListener = function deleteFoodMealListener() {
 	  $('.meal-table').on('click', function (event) {
 	    if (event.target.nodeName == 'BUTTON') {
 	      var foodId = event.target.id.split('-')[2];
@@ -101,7 +118,7 @@
 	      updateMealCalories(setFoodData(event.target), mealName, 'decreaseMeal');
 	    }
 	  });
-	});
+	};
 
 	var updateMealCalories = function updateMealCalories(food, meal, method) {
 	  updateMealTable(food, meal, method);
@@ -301,7 +318,7 @@
 	  });
 	};
 
-	var deleteFood = function deleteFood(id) {
+	var deleteFood = function deleteFood(id, event, removeFoodRow) {
 	  fetch(baseURL + '/api/v1/foods/' + id, {
 	    method: 'DELETE'
 	  }).then(function (response) {
@@ -522,9 +539,9 @@
 
 	var styleRemainingCalorieCount = function styleRemainingCalorieCount(meal, remainingCalories) {
 	  if (remainingCalories < 0) {
-	    $('#' + meal + '-remaining-calories-count').addClass('negative-remainder');
+	    $('#' + meal + '-remaining-calories-count').removeClass().addClass('negative-remainder');
 	  } else {
-	    $('#' + meal + '-remaining-calories-count').addClass('positive-remainder');
+	    $('#' + meal + '-remaining-calories-count').removeClass().addClass('positive-remainder');
 	  }
 	};
 
