@@ -308,8 +308,16 @@
 
 	var baseURL = 'https://ivmh-quantified-self-express.herokuapp.com';
 
+	var foodsAPIFetch = function foodsAPIFetch(id, method, body) {
+	  return fetch(baseURL + '/api/v1/foods/' + id, {
+	    method: '' + method,
+	    headers: { 'Content-Type': 'application/json' },
+	    body: JSON.stringify(body)
+	  });
+	};
+
 	var getFoods = function getFoods() {
-	  fetch(baseURL + '/api/v1/foods').then(function (response) {
+	  foodsAPIFetch('', 'GET').then(function (response) {
 	    return handleResponse(response);
 	  }).then(function (foods) {
 	    return getEachFood(foods);
@@ -319,9 +327,7 @@
 	};
 
 	var deleteFood = function deleteFood(id, event, removeFoodRow) {
-	  fetch(baseURL + '/api/v1/foods/' + id, {
-	    method: 'DELETE'
-	  }).then(function (response) {
+	  foodsAPIFetch(id, 'DELETE').then(function (response) {
 	    return checkSuccessfulDelete(response, event, removeFoodRow);
 	  });
 	};
@@ -339,16 +345,7 @@
 	  var foodName = $('#food-name').val();
 	  var foodCalories = $('#food-calories').val();
 
-	  fetch(baseURL + '/api/v1/foods', {
-	    method: 'POST',
-	    headers: { 'Content-Type': 'application/json' },
-	    body: JSON.stringify({
-	      food: {
-	        name: foodName,
-	        calories: foodCalories
-	      }
-	    })
-	  }).then(function (response) {
+	  foodsAPIFetch('', 'POST', { food: { name: foodName, calories: foodCalories } }).then(function (response) {
 	    return handleResponse(response);
 	  }).then(function (newFood) {
 	    return renderFood(newFood);
@@ -391,16 +388,7 @@
 	var updateFood = function updateFood(id) {
 	  var foodName = $('.food-item-' + id).children()[0].innerText;
 	  var foodCalories = $('.food-item-' + id).children()[1].innerText;
-	  fetch(baseURL + '/api/v1/foods/' + id, {
-	    method: 'PUT',
-	    headers: { 'Content-Type': 'application/json' },
-	    body: JSON.stringify({
-	      food: {
-	        name: foodName,
-	        calories: foodCalories
-	      }
-	    })
-	  }).then(function (response) {
+	  foodsAPIFetch(id, 'PUT', { food: { name: foodName, calories: foodCalories } }).then(function (response) {
 	    return handleResponse(response);
 	  }).catch(function (error) {
 	    return console.error({ error: error });
@@ -411,19 +399,28 @@
 	  getFoods: getFoods,
 	  deleteFood: deleteFood,
 	  addNewFood: addNewFood,
-	  updateFood: updateFood
+	  updateFood: updateFood,
+	  foodsAPIFetch: foodsAPIFetch
 	};
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
+	var foodsRequests = __webpack_require__(1);
+
 	var baseURL = 'https://ivmh-quantified-self-express.herokuapp.com';
 
+	var mealsAPIFetch = function mealsAPIFetch(id, method, extension) {
+	  return fetch(baseURL + '/api/v1/meals/' + id + extension, {
+	    method: method
+	  });
+	};
+
 	var getDiaryFoods = function getDiaryFoods() {
-	  fetch(baseURL + '/api/v1/foods').then(function (response) {
+	  foodsRequests.foodsAPIFetch('', 'GET').then(function (response) {
 	    return handleResponse(response);
 	  }).then(function (foods) {
 	    return getEachDiaryFood(foods);
@@ -433,7 +430,7 @@
 	};
 
 	var getMeals = function getMeals() {
-	  fetch(baseURL + '/api/v1/meals').then(function (response) {
+	  mealsAPIFetch('', 'GET', '').then(function (response) {
 	    return handleResponse(response);
 	  }).then(function (meals) {
 	    meals.forEach(function (meal) {
@@ -455,9 +452,7 @@
 	var updateMealWithFood = function updateMealWithFood(mealName, foodId, method) {
 	  var mealInfo = { 'breakfast': '1', 'snack': '2', 'lunch': '3', 'dinner': '4' };
 	  var mealId = mealInfo['' + mealName];
-	  fetch(baseURL + '/api/v1/meals/' + mealId + '/foods/' + foodId, {
-	    method: '' + method
-	  });
+	  mealsAPIFetch(mealId, method, '/foods/' + foodId);
 	};
 
 	var populateMealTable = function populateMealTable(meal) {
@@ -657,7 +652,7 @@
 
 
 	// module
-	exports.push([module.id, ".food-headers, .food-item-row {\n  width: 300px;\n  display: flex;\n  justify-content: space-between; }\n\n.food-headers, .food-item-row {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.food-headers .name-header, .food-headers .calorie-header {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.food-headers .name-header {\n  width: 200px; }\n\n.food-headers .calorie-header {\n  width: 60px;\n  padding-right: 5px;\n  border-left: 0px; }\n\n.food-headers .hidden {\n  width: 50px; }\n\n.food-item-row .food-item-name {\n  width: 200px; }\n\n.food-item-row .food-item-calories {\n  width: 50px; }\n\n.food-item-row .button-container {\n  width: 25px; }\n  .food-item-row .button-container .food-item-delete-btn {\n    color: white;\n    height: 20px;\n    width: 20px;\n    border: 1px solid tomato;\n    border-radius: 30px;\n    background-color: tomato;\n    text-align: center; }\n\n#name-notice {\n  display: none;\n  color: tomato; }\n\n#calories-notice {\n  display: none;\n  color: tomato; }\n", ""]);
+	exports.push([module.id, ".food-headers, .food-item-row {\n  width: 300px;\n  display: flex;\n  justify-content: space-between; }\n\n.food-headers, .food-item-row {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.food-headers .name-header, .food-headers .calorie-header {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.food-headers .name-header {\n  width: 200px; }\n\n.food-headers .calorie-header {\n  width: 60px;\n  padding-right: 5px;\n  border-left: 0px; }\n\n.food-headers .hidden {\n  width: 50px; }\n\n.food-item-row .food-item-name {\n  width: 200px; }\n\n.food-item-row .food-item-calories {\n  width: 50px; }\n\n.food-item-row .button-container {\n  width: 25px; }\n  .food-item-row .button-container .food-item-delete-btn {\n    color: white;\n    height: 20px;\n    width: 20px;\n    border: 1px solid tomato;\n    border-radius: 30px;\n    background-color: tomato;\n    text-align: center; }\n\n#name-notice {\n  display: none;\n  color: tomato; }\n\n#calories-notice {\n  display: none;\n  color: tomato; }\n\n#food-filter-input {\n  width: 243px;\n  display: flex;\n  flex-direction: column; }\n\n.food-name-container input {\n  width: 243px;\n  display: flex;\n  flex-direction: column; }\n\n.food-calories-container input {\n  width: 243px;\n  display: flex;\n  flex-direction: column; }\n\nbody {\n  display: flex;\n  justify-content: center; }\n", ""]);
 
 	// exports
 
@@ -1002,10 +997,10 @@
 
 	exports = module.exports = __webpack_require__(6)();
 	// imports
-
+	exports.push([module.id, "@import url(https://fonts.googleapis.com/css?family=Montserrat);", ""]);
 
 	// module
-	exports.push([module.id, "h3, h4 {\n  margin-top: 10px;\n  margin-bottom: 10px;\n  font-weight: 100; }\n\n.breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container .meal-table {\n    padding: 20px; }\n\n.total-calories, .remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.remaining-calories {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories, .calories-goal, .diary-total-calories-consumed {\n  display: flex;\n  justify-content: flex-end;\n  padding-right: 5px; }\n\n.total-calories {\n  display: flex;\n  height: 25px;\n  align-items: center;\n  justify-content: space-between;\n  width: 248px; }\n\n.calories-total-amount {\n  padding-right: 5px; }\n\n.positive-remainder {\n  color: #009600; }\n\n.negative-remainder {\n  color: tomato; }\n\n.remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n  height: 11px;\n  padding-top: 4px;\n  padding-bottom: 9px; }\n\n.remaining-calories {\n  width: 255px; }\n  .remaining-calories .remaining-calories-header {\n    width: 100%;\n    border-top: 0; }\n  .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n    width: 50px;\n    border-left: 0;\n    border-top: 0; }\n\n.calories-consumed {\n  border-top: none; }\n\n.default-button {\n  background-color: #56ccf2;\n  height: 30px;\n  width: 110px;\n  border: 1px solid black;\n  border-radius: 30px;\n  font-weight: bold;\n  margin-top: 5px;\n  margin-bottom: 5px; }\n\n.food-diary-controls {\n  width: 254px; }\n  .food-diary-controls .meal-add-buttons {\n    width: 100%;\n    display: flex;\n    flex-direction: column;\n    justify-content: space-between;\n    margin-top: 10px;\n    margin-bottom: 10px; }\n  .food-diary-controls .button-row-1, .food-diary-controls .button-row-2 {\n    width: 100%;\n    display: flex;\n    justify-content: space-between; }\n", ""]);
+	exports.push([module.id, "body {\n  font-family: 'Montserrat', sans-serif; }\n\nh3, h4 {\n  margin-top: 10px;\n  margin-bottom: 10px;\n  font-weight: 100; }\n\ninput {\n  padding-left: 10px; }\n\n.breakfast-table {\n  width: 300px; }\n\n.meals-container {\n  display: flex; }\n  .meals-container .meal-table {\n    padding: 20px; }\n\n.total-calories, .remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n  border: 1px solid black;\n  background-color: lightgrey;\n  padding-left: 5px; }\n\n.remaining-calories {\n  height: 25px;\n  margin: 0px;\n  display: flex;\n  align-items: center; }\n\n.remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories, .calories-goal, .diary-total-calories-consumed {\n  display: flex;\n  justify-content: flex-end;\n  padding-right: 5px; }\n\n.total-calories {\n  display: flex;\n  height: 25px;\n  align-items: center;\n  justify-content: space-between;\n  width: 248px; }\n\n.calories-total-amount {\n  padding-right: 5px; }\n\n.positive-remainder {\n  color: #009600; }\n\n.negative-remainder {\n  color: tomato; }\n\n.remaining-calories .remaining-calories-header, .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n  height: 11px;\n  padding-top: 4px;\n  padding-bottom: 9px; }\n\n.remaining-calories {\n  width: 255px; }\n  .remaining-calories .remaining-calories-header {\n    width: 100%;\n    border-top: 0; }\n  .remaining-calories .total-remaining-calories, .remaining-calories .diary-total-remaining-calories {\n    width: 50px;\n    border-left: 0;\n    border-top: 0; }\n\n.calories-consumed {\n  border-top: none; }\n\n.default-button {\n  background-color: #56ccf2;\n  height: 30px;\n  width: 110px;\n  border: 1px solid black;\n  border-radius: 30px;\n  font-weight: bold;\n  margin-top: 5px;\n  margin-bottom: 5px; }\n\n.food-diary-controls {\n  width: 254px;\n  padding-left: 20px; }\n  .food-diary-controls .meal-add-buttons {\n    width: 100%;\n    display: flex;\n    flex-direction: column;\n    justify-content: space-between;\n    margin-top: 10px;\n    margin-bottom: 10px; }\n  .food-diary-controls .button-row-1, .food-diary-controls .button-row-2 {\n    width: 100%;\n    display: flex;\n    justify-content: space-between; }\n\n.diary-total-calories-container {\n  padding-left: 20px; }\n\n#food-name-filter input, .food-name-container input, .food-calories-container input {\n  height: 20px;\n  border-radius: 20px;\n  border: 1px solid black;\n  margin-top: 5px;\n  margin-bottom: 5px; }\n", ""]);
 
 	// exports
 
